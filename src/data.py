@@ -25,6 +25,7 @@ class Request:
     hist: tuple = ()
     seen: frozenset = field(default_factory=frozenset)
     user_code: int = 0
+    past_count: int = 0
 
     @property
     def positives(self):
@@ -92,6 +93,7 @@ def attach_histories(data, length):
                 state[item] = max(prev.end, state.get(item, 0))
             index += 1
         state = profile[r.uid]
+        r.past_count = len(state)
         r.hist = tuple(heapq.nlargest(length, state, key=lambda i: (state[i], i)))
         # Current official recent list is only a serve-time exclusion list.
         r.seen = frozenset(state).union(r.recent)
