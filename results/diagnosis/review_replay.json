@@ -1,0 +1,400 @@
+{
+  "lambda_selection": {
+    "requests": 6954,
+    "exposures": 95731,
+    "iterations": 45,
+    "selected": 25,
+    "reference_ndcg10": 0.5989382529452925,
+    "max_abs_diff": 2.220446049250313e-16,
+    "curve": [
+      {
+        "trees": 1,
+        "logged": 0.5706454448696258,
+        "reference": 0.5706454448696257
+      },
+      {
+        "trees": 2,
+        "logged": 0.5848466855364106,
+        "reference": 0.5848466855364106
+      },
+      {
+        "trees": 3,
+        "logged": 0.5856226596254365,
+        "reference": 0.5856226596254365
+      },
+      {
+        "trees": 4,
+        "logged": 0.5847041309791957,
+        "reference": 0.5847041309791957
+      },
+      {
+        "trees": 5,
+        "logged": 0.5888512547665827,
+        "reference": 0.5888512547665827
+      },
+      {
+        "trees": 6,
+        "logged": 0.5893097640328595,
+        "reference": 0.5893097640328595
+      },
+      {
+        "trees": 7,
+        "logged": 0.5896619235146413,
+        "reference": 0.5896619235146413
+      },
+      {
+        "trees": 8,
+        "logged": 0.5893325228325378,
+        "reference": 0.5893325228325378
+      },
+      {
+        "trees": 9,
+        "logged": 0.5969233993903399,
+        "reference": 0.5969233993903399
+      },
+      {
+        "trees": 10,
+        "logged": 0.59633093545386,
+        "reference": 0.5963309354538601
+      },
+      {
+        "trees": 11,
+        "logged": 0.5959522584432775,
+        "reference": 0.5959522584432775
+      },
+      {
+        "trees": 12,
+        "logged": 0.596575250118124,
+        "reference": 0.596575250118124
+      },
+      {
+        "trees": 13,
+        "logged": 0.596275670410746,
+        "reference": 0.5962756704107461
+      },
+      {
+        "trees": 14,
+        "logged": 0.5968710282835579,
+        "reference": 0.5968710282835579
+      },
+      {
+        "trees": 15,
+        "logged": 0.5966529710253664,
+        "reference": 0.5966529710253665
+      },
+      {
+        "trees": 16,
+        "logged": 0.5971760990900936,
+        "reference": 0.5971760990900936
+      },
+      {
+        "trees": 17,
+        "logged": 0.5974074333365376,
+        "reference": 0.5974074333365376
+      },
+      {
+        "trees": 18,
+        "logged": 0.5977445034603373,
+        "reference": 0.5977445034603373
+      },
+      {
+        "trees": 19,
+        "logged": 0.5978347865154007,
+        "reference": 0.5978347865154007
+      },
+      {
+        "trees": 20,
+        "logged": 0.597644599470243,
+        "reference": 0.5976445994702428
+      },
+      {
+        "trees": 21,
+        "logged": 0.5977254530027777,
+        "reference": 0.5977254530027777
+      },
+      {
+        "trees": 22,
+        "logged": 0.5977365609768147,
+        "reference": 0.5977365609768147
+      },
+      {
+        "trees": 23,
+        "logged": 0.5978720128766712,
+        "reference": 0.5978720128766712
+      },
+      {
+        "trees": 24,
+        "logged": 0.5987528814531573,
+        "reference": 0.5987528814531573
+      },
+      {
+        "trees": 25,
+        "logged": 0.5989382529452925,
+        "reference": 0.5989382529452925
+      },
+      {
+        "trees": 26,
+        "logged": 0.5985640808817081,
+        "reference": 0.5985640808817081
+      },
+      {
+        "trees": 27,
+        "logged": 0.598314251486562,
+        "reference": 0.598314251486562
+      },
+      {
+        "trees": 28,
+        "logged": 0.5982230991643355,
+        "reference": 0.5982230991643355
+      },
+      {
+        "trees": 29,
+        "logged": 0.5982238407065487,
+        "reference": 0.5982238407065488
+      },
+      {
+        "trees": 30,
+        "logged": 0.5979543479684505,
+        "reference": 0.5979543479684505
+      },
+      {
+        "trees": 31,
+        "logged": 0.5979733110724834,
+        "reference": 0.5979733110724834
+      },
+      {
+        "trees": 32,
+        "logged": 0.5985549731690507,
+        "reference": 0.5985549731690507
+      },
+      {
+        "trees": 33,
+        "logged": 0.5986762119586277,
+        "reference": 0.5986762119586275
+      },
+      {
+        "trees": 34,
+        "logged": 0.5981336790488413,
+        "reference": 0.5981336790488413
+      },
+      {
+        "trees": 35,
+        "logged": 0.5979604291698093,
+        "reference": 0.5979604291698093
+      },
+      {
+        "trees": 36,
+        "logged": 0.5977798275777703,
+        "reference": 0.5977798275777703
+      },
+      {
+        "trees": 37,
+        "logged": 0.5978655003639083,
+        "reference": 0.5978655003639083
+      },
+      {
+        "trees": 38,
+        "logged": 0.597795197307451,
+        "reference": 0.597795197307451
+      },
+      {
+        "trees": 39,
+        "logged": 0.5975220186196274,
+        "reference": 0.5975220186196274
+      },
+      {
+        "trees": 40,
+        "logged": 0.5976965967078562,
+        "reference": 0.5976965967078562
+      },
+      {
+        "trees": 41,
+        "logged": 0.5974477104536755,
+        "reference": 0.5974477104536755
+      },
+      {
+        "trees": 42,
+        "logged": 0.5976332243052382,
+        "reference": 0.5976332243052382
+      },
+      {
+        "trees": 43,
+        "logged": 0.5980501904099377,
+        "reference": 0.5980501904099377
+      },
+      {
+        "trees": 44,
+        "logged": 0.5976559540107859,
+        "reference": 0.5976559540107859
+      },
+      {
+        "trees": 45,
+        "logged": 0.5977227229547882,
+        "reference": 0.5977227229547882
+      }
+    ]
+  },
+  "rrf100_feedback": {
+    "rank_train": {
+      "requests": 16048,
+      "pairs": 1604800,
+      "click": 317,
+      "exposed_nonclick": 585,
+      "unjudged": 1603898,
+      "requests_with_feedback": 823,
+      "requests_with_both_labels": 24
+    },
+    "rank_val": {
+      "requests": 6954,
+      "pairs": 695400,
+      "click": 94,
+      "exposed_nonclick": 203,
+      "unjudged": 695103,
+      "requests_with_feedback": 270,
+      "requests_with_both_labels": 7
+    },
+    "test": {
+      "requests": 11115,
+      "pairs": 1111500,
+      "click": 174,
+      "exposed_nonclick": 320,
+      "unjudged": 1111006,
+      "requests_with_feedback": 467,
+      "requests_with_both_labels": 9
+    }
+  },
+  "catalog": {
+    "catalog": 1983938,
+    "input_per_channel": 100,
+    "mean_union_size": 269.84984255510574,
+    "min_union_size": 199,
+    "max_union_size": 300,
+    "denominators": {
+      "all": {
+        "positives": 44683,
+        "click_requests": 11115
+      },
+      "seen_in_fit_exposures_or_recent": {
+        "positives": 12679,
+        "click_requests": 5662
+      },
+      "unseen_in_fit_exposures_and_recent": {
+        "positives": 32004,
+        "click_requests": 10212
+      }
+    },
+    "slices": {
+      "all": {
+        "pop100": {
+          "hits": 272,
+          "macro_recall": 0.0047995666287030956,
+          "micro_recall": 0.00608732627621243
+        },
+        "itemcf100": {
+          "hits": 21,
+          "macro_recall": 0.0003895322687077616,
+          "micro_recall": 0.0004699773963252244
+        },
+        "tower100": {
+          "hits": 8,
+          "macro_recall": 0.0002508990274456572,
+          "micro_recall": 0.00017903900812389498
+        },
+        "rrf100": {
+          "hits": 174,
+          "macro_recall": 0.0035038762354508398,
+          "micro_recall": 0.003894098426694716
+        },
+        "union": {
+          "hits": 301,
+          "macro_recall": 0.005439997924856516,
+          "micro_recall": 0.006736342680661549
+        },
+        "pop_matched_to_union_size": {
+          "hits": 469,
+          "macro_recall": 0.008511421289394128,
+          "micro_recall": 0.010496161851263343
+        },
+        "pop300": {
+          "hits": 505,
+          "macro_recall": 0.009291177503485164,
+          "micro_recall": 0.011301837387820871
+        }
+      },
+      "seen_in_fit_exposures_or_recent": {
+        "pop100": {
+          "hits": 272,
+          "macro_recall": 0.019924156753015815,
+          "micro_recall": 0.021452795961826643
+        },
+        "itemcf100": {
+          "hits": 21,
+          "macro_recall": 0.0020237254209348873,
+          "micro_recall": 0.0016562820411704393
+        },
+        "tower100": {
+          "hits": 1,
+          "macro_recall": 0.00017661603673613564,
+          "micro_recall": 7.887057338906853e-05
+        },
+        "rrf100": {
+          "hits": 173,
+          "macro_recall": 0.014086014068352465,
+          "micro_recall": 0.013644609196308857
+        },
+        "union": {
+          "hits": 294,
+          "macro_recall": 0.022124498210686835,
+          "micro_recall": 0.02318794857638615
+        },
+        "pop_matched_to_union_size": {
+          "hits": 469,
+          "macro_recall": 0.03507386629030923,
+          "micro_recall": 0.03699029891947314
+        },
+        "pop300": {
+          "hits": 505,
+          "macro_recall": 0.03766427909377676,
+          "micro_recall": 0.03982963956147961
+        }
+      },
+      "unseen_in_fit_exposures_and_recent": {
+        "pop100": {
+          "hits": 0,
+          "macro_recall": 0.0,
+          "micro_recall": 0.0
+        },
+        "itemcf100": {
+          "hits": 0,
+          "macro_recall": 0.0,
+          "micro_recall": 0.0
+        },
+        "tower100": {
+          "hits": 7,
+          "macro_recall": 0.0001819906711211059,
+          "micro_recall": 0.00021872265966754156
+        },
+        "rrf100": {
+          "hits": 1,
+          "macro_recall": 1.2240501370936153e-05,
+          "micro_recall": 3.124609423822022e-05
+        },
+        "union": {
+          "hits": 7,
+          "macro_recall": 0.0001819906711211059,
+          "micro_recall": 0.00021872265966754156
+        },
+        "pop_matched_to_union_size": {
+          "hits": 0,
+          "macro_recall": 0.0,
+          "micro_recall": 0.0
+        },
+        "pop300": {
+          "hits": 0,
+          "macro_recall": 0.0,
+          "micro_recall": 0.0
+        }
+      }
+    }
+  }
+}

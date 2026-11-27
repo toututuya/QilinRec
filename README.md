@@ -56,6 +56,8 @@ DIN 的曝光 LogLoss 更低，AUC 略低于 MLP。两者曝光 NDCG@10 的差�
 
 256 个相同测试查询上，FlatIP 与 IVFFlat 的批量摊销延迟分别为 2.651 和 0.118 毫秒/请求，Top 100 集合重合率为 92.54%。五项消融及全部截止位见 [正式实验报告](results/formal/report.md)。
 
+后续复核覆盖全部测试请求。三路完整并集平均每请求产生 269.85 个候选，找回 301 个点击。热门召回在每个请求使用相同候选数时找回 469 个。对同一双塔做全库精确打分找回 10 个，IVFFlat 找回 8 个。官方曝光候选池核对、三种子配对重训、冷启动分层和 LambdaRank 全部 45 轮的独立复算见 [召回与模型选择复核](docs/recall_diagnosis.md)。
+
 ## 在 Atlas 复现
 
 实测环境为 Python 3.12、PyTorch 2.7.1+cu128、CUDA 12.8 和 RTX 4090，FAISS 索引在 CPU 上运行。Atlas 已有项目专用的 `.venv`。从其他机器复现时，先克隆审阅分支，再用已装兼容 CUDA 版 PyTorch 的 Python 3.12 创建项目环境。

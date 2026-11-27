@@ -1,0 +1,883 @@
+{
+  "design": {
+    "epochs": 12,
+    "seeds": [
+      20261127,
+      20261128,
+      20261129
+    ],
+    "selection": "all tower_val requests, exact full-catalog macro Recall@100",
+    "later_window": "rank_val",
+    "modes": [
+      "reconstructed",
+      "official_recent"
+    ],
+    "split": "723e9c247e48c8ffeeeb9746f4e3b5d370e5380cc5b870f86e5f219860b13258"
+  },
+  "trials": [
+    {
+      "mode": "reconstructed",
+      "seed": 20261127,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.967570906156814,
+          "val_recall100": 0.00019195706324953135,
+          "val_hits": 5,
+          "val_requests": 5563,
+          "seconds": 2.7131784849916585
+        },
+        {
+          "epoch": 2,
+          "loss": 5.82618184135163,
+          "val_recall100": 0.0005101735103532695,
+          "val_hits": 6,
+          "val_requests": 5563,
+          "seconds": 1.7534304919827264
+        },
+        {
+          "epoch": 3,
+          "loss": 5.691079231901715,
+          "val_recall100": 0.0005171331285642456,
+          "val_hits": 10,
+          "val_requests": 5563,
+          "seconds": 1.8350190549972467
+        },
+        {
+          "epoch": 4,
+          "loss": 5.590182470883171,
+          "val_recall100": 0.001115868372744159,
+          "val_hits": 14,
+          "val_requests": 5563,
+          "seconds": 1.7914483029744588
+        },
+        {
+          "epoch": 5,
+          "loss": 5.480610100226031,
+          "val_recall100": 0.0012253099563162902,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.8195742400130257
+        },
+        {
+          "epoch": 6,
+          "loss": 5.353239416440474,
+          "val_recall100": 0.0011319087980788548,
+          "val_hits": 20,
+          "val_requests": 5563,
+          "seconds": 1.7850119219801854
+        },
+        {
+          "epoch": 7,
+          "loss": 5.2077942638016435,
+          "val_recall100": 0.0012979739830187478,
+          "val_hits": 24,
+          "val_requests": 5563,
+          "seconds": 1.7921743759943638
+        },
+        {
+          "epoch": 8,
+          "loss": 5.049271531600579,
+          "val_recall100": 0.001293104560463142,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.8343572040030267
+        },
+        {
+          "epoch": 9,
+          "loss": 4.885156857472937,
+          "val_recall100": 0.0008579376840774991,
+          "val_hits": 15,
+          "val_requests": 5563,
+          "seconds": 1.7864506139885634
+        },
+        {
+          "epoch": 10,
+          "loss": 4.720141321423414,
+          "val_recall100": 0.0016281199255881603,
+          "val_hits": 22,
+          "val_requests": 5563,
+          "seconds": 1.7925773760071024
+        },
+        {
+          "epoch": 11,
+          "loss": 4.555187440394497,
+          "val_recall100": 0.0015376230595205587,
+          "val_hits": 21,
+          "val_requests": 5563,
+          "seconds": 1.8047339010227006
+        },
+        {
+          "epoch": 12,
+          "loss": 4.395813350358575,
+          "val_recall100": 0.0010874065116380416,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.837282081018202
+        }
+      ],
+      "best": {
+        "epoch": 10,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0011594902556938795,
+          "hits100": 15
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 4.376686215400696,
+          "top1": 0.1514756977558136,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.0827609697977705,
+          "top1": 0.023003472636143368,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.001048785442659472,
+          "hits100": 16
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.9830226500829062,
+          "top1": 0.21050347636143366,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.317229390144348,
+          "top1": 0.02018229205471774,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    },
+    {
+      "mode": "reconstructed",
+      "seed": 20261128,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.954886101163637,
+          "val_recall100": 0.000249665448299279,
+          "val_hits": 4,
+          "val_requests": 5563,
+          "seconds": 1.774544321000576
+        },
+        {
+          "epoch": 2,
+          "loss": 5.793511934168236,
+          "val_recall100": 0.0008656148014407946,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.7400325089984108
+        },
+        {
+          "epoch": 3,
+          "loss": 5.684128802477159,
+          "val_recall100": 0.0009051132352213251,
+          "val_hits": 9,
+          "val_requests": 5563,
+          "seconds": 1.8259030439949129
+        },
+        {
+          "epoch": 4,
+          "loss": 5.594537250073514,
+          "val_recall100": 0.0008373779135957816,
+          "val_hits": 8,
+          "val_requests": 5563,
+          "seconds": 1.8224070800060872
+        },
+        {
+          "epoch": 5,
+          "loss": 5.487565991157356,
+          "val_recall100": 0.0017649610391640418,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.742951689986512
+        },
+        {
+          "epoch": 6,
+          "loss": 5.35799215516983,
+          "val_recall100": 0.001262078867793093,
+          "val_hits": 13,
+          "val_requests": 5563,
+          "seconds": 1.7287774779833853
+        },
+        {
+          "epoch": 7,
+          "loss": 5.212398688520667,
+          "val_recall100": 0.0012664847286454333,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.7320029409893323
+        },
+        {
+          "epoch": 8,
+          "loss": 5.061353948098041,
+          "val_recall100": 0.0009144468819808212,
+          "val_hits": 15,
+          "val_requests": 5563,
+          "seconds": 1.8083509469870478
+        },
+        {
+          "epoch": 9,
+          "loss": 4.9032764132662585,
+          "val_recall100": 0.0013607170118748952,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.72612019997905
+        },
+        {
+          "epoch": 10,
+          "loss": 4.741155743827448,
+          "val_recall100": 0.0012379016513476338,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.728483774990309
+        },
+        {
+          "epoch": 11,
+          "loss": 4.582339015587973,
+          "val_recall100": 0.0015195242770292205,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7465965099981986
+        },
+        {
+          "epoch": 12,
+          "loss": 4.421808037031232,
+          "val_recall100": 0.001135906456776491,
+          "val_hits": 15,
+          "val_requests": 5563,
+          "seconds": 1.7613339739909861
+        }
+      ],
+      "best": {
+        "epoch": 5,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0010210573627312195,
+          "hits100": 14
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 5.334393938382466,
+          "top1": 0.05186632058272759,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 5.729371587435405,
+          "top1": 0.019097222791363794,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0010611113393684574,
+          "hits100": 15
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.917423109213511,
+          "top1": 0.2243923656642437,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.3069034814834595,
+          "top1": 0.023871528605620067,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    },
+    {
+      "mode": "reconstructed",
+      "seed": 20261129,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.9631260876676935,
+          "val_recall100": 0.0003045918469251203,
+          "val_hits": 4,
+          "val_requests": 5563,
+          "seconds": 1.7646935599914286
+        },
+        {
+          "epoch": 2,
+          "loss": 5.823483005294653,
+          "val_recall100": 0.00034285101919471865,
+          "val_hits": 6,
+          "val_requests": 5563,
+          "seconds": 1.7201294200203847
+        },
+        {
+          "epoch": 3,
+          "loss": 5.703794743996479,
+          "val_recall100": 0.0010498599943302865,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.735291018994758
+        },
+        {
+          "epoch": 4,
+          "loss": 5.5985018999406035,
+          "val_recall100": 0.001001622112084093,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.7291587269864976
+        },
+        {
+          "epoch": 5,
+          "loss": 5.488608213936465,
+          "val_recall100": 0.0010657647471244496,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.7277289750054479
+        },
+        {
+          "epoch": 6,
+          "loss": 5.357067980135849,
+          "val_recall100": 0.0004046039346237081,
+          "val_hits": 11,
+          "val_requests": 5563,
+          "seconds": 1.760667205991922
+        },
+        {
+          "epoch": 7,
+          "loss": 5.20982243633857,
+          "val_recall100": 0.0006009290942039882,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.7250836330058519
+        },
+        {
+          "epoch": 8,
+          "loss": 5.053187809621924,
+          "val_recall100": 0.0009320883222223847,
+          "val_hits": 13,
+          "val_requests": 5563,
+          "seconds": 1.7192399619962089
+        },
+        {
+          "epoch": 9,
+          "loss": 4.887319106947496,
+          "val_recall100": 0.0007797051950386481,
+          "val_hits": 13,
+          "val_requests": 5563,
+          "seconds": 1.720992329006549
+        },
+        {
+          "epoch": 10,
+          "loss": 4.725572073698612,
+          "val_recall100": 0.001435057550419417,
+          "val_hits": 22,
+          "val_requests": 5563,
+          "seconds": 1.7262113559991121
+        },
+        {
+          "epoch": 11,
+          "loss": 4.5565650168336544,
+          "val_recall100": 0.001047096890167176,
+          "val_hits": 13,
+          "val_requests": 5563,
+          "seconds": 1.8221314609982073
+        },
+        {
+          "epoch": 12,
+          "loss": 4.396412235942226,
+          "val_recall100": 0.0010136300055872346,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7429319880029652
+        }
+      ],
+      "best": {
+        "epoch": 10,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0010287610481743354,
+          "hits100": 16
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 4.346097191174825,
+          "top1": 0.14800347884496054,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.128621379534404,
+          "top1": 0.024305556357527774,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0006596637312771913,
+          "hits100": 10
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.9427623351415,
+          "top1": 0.2096354216337204,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.280817627906799,
+          "top1": 0.022786458876604836,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    },
+    {
+      "mode": "official_recent",
+      "seed": 20261127,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.954463516732366,
+          "val_recall100": 0.00022606071500552895,
+          "val_hits": 4,
+          "val_requests": 5563,
+          "seconds": 1.8020058090041857
+        },
+        {
+          "epoch": 2,
+          "loss": 5.750186205752472,
+          "val_recall100": 0.0010494746563414548,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.743127622990869
+        },
+        {
+          "epoch": 3,
+          "loss": 5.57651423352024,
+          "val_recall100": 0.0015897498365418598,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.7432210660190322
+        },
+        {
+          "epoch": 4,
+          "loss": 5.483738663374881,
+          "val_recall100": 0.001301612229599162,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7002127149899025
+        },
+        {
+          "epoch": 5,
+          "loss": 5.371715861053747,
+          "val_recall100": 0.0009475938605904451,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7092214299773332
+        },
+        {
+          "epoch": 6,
+          "loss": 5.239918610059077,
+          "val_recall100": 0.0015527521361762301,
+          "val_hits": 21,
+          "val_requests": 5563,
+          "seconds": 1.7193929030036088
+        },
+        {
+          "epoch": 7,
+          "loss": 5.094537354124319,
+          "val_recall100": 0.0013021806338189628,
+          "val_hits": 21,
+          "val_requests": 5563,
+          "seconds": 1.8596089920029044
+        },
+        {
+          "epoch": 8,
+          "loss": 4.942006310401603,
+          "val_recall100": 0.0009882779996559126,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.7055086930049583
+        },
+        {
+          "epoch": 9,
+          "loss": 4.785786140129205,
+          "val_recall100": 0.0015074319128944751,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7141895199893042
+        },
+        {
+          "epoch": 10,
+          "loss": 4.625055471618343,
+          "val_recall100": 0.0010341422080554813,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 3.0859073270112276
+        },
+        {
+          "epoch": 11,
+          "loss": 4.46903695854422,
+          "val_recall100": 0.001623276680905341,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 3.8414522029925138
+        },
+        {
+          "epoch": 12,
+          "loss": 4.31404967781429,
+          "val_recall100": 0.0015247723131218069,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 4.486010074993828
+        }
+      ],
+      "best": {
+        "epoch": 11,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0016405026683283803,
+          "hits100": 29
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 4.084487179915111,
+          "top1": 0.19574653233091036,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.026634653409322,
+          "top1": 0.031684028605620064,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0016999637070819122,
+          "hits100": 28
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.906111419200897,
+          "top1": 0.22265625496705374,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.105754931767781,
+          "top1": 0.03276909810180465,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    },
+    {
+      "mode": "official_recent",
+      "seed": 20261128,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.938677503771976,
+          "val_recall100": 0.0007653380833319716,
+          "val_hits": 9,
+          "val_requests": 5563,
+          "seconds": 2.8646773450018372
+        },
+        {
+          "epoch": 2,
+          "loss": 5.714066110964284,
+          "val_recall100": 0.0012573151976351688,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 3.5165749570005573
+        },
+        {
+          "epoch": 3,
+          "loss": 5.591422241956378,
+          "val_recall100": 0.0007987529294101827,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 2.7154243620170746
+        },
+        {
+          "epoch": 4,
+          "loss": 5.483886150776335,
+          "val_recall100": 0.0011726273043167227,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.8097758800140582
+        },
+        {
+          "epoch": 5,
+          "loss": 5.3650926218662285,
+          "val_recall100": 0.0016706075397428983,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7961019380018115
+        },
+        {
+          "epoch": 6,
+          "loss": 5.227616910399995,
+          "val_recall100": 0.0013763297940001156,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.776671426021494
+        },
+        {
+          "epoch": 7,
+          "loss": 5.078788342561906,
+          "val_recall100": 0.001163400833093445,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7768798519973643
+        },
+        {
+          "epoch": 8,
+          "loss": 4.924718023075932,
+          "val_recall100": 0.0010990552380090398,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.8944717849954031
+        },
+        {
+          "epoch": 9,
+          "loss": 4.769740610406472,
+          "val_recall100": 0.0015778024315032998,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.879242562019499
+        },
+        {
+          "epoch": 10,
+          "loss": 4.6081738247566255,
+          "val_recall100": 0.0009935148439552536,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7000142209872138
+        },
+        {
+          "epoch": 11,
+          "loss": 4.455455813166217,
+          "val_recall100": 0.000749116167799959,
+          "val_hits": 13,
+          "val_requests": 5563,
+          "seconds": 1.8434916680271272
+        },
+        {
+          "epoch": 12,
+          "loss": 4.3039884639276265,
+          "val_recall100": 0.0012934310880562902,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.7507410680118483
+        }
+      ],
+      "best": {
+        "epoch": 5,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0008807880356629278,
+          "hits100": 16
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 5.238728443781535,
+          "top1": 0.058159722946584225,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 5.57966407140096,
+          "top1": 0.027560764613250893,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0020145993398797543,
+          "hits100": 22
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.892266849676768,
+          "top1": 0.22048611814777055,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.075302561124166,
+          "top1": 0.0262586809694767,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    },
+    {
+      "mode": "official_recent",
+      "seed": 20261129,
+      "curve": [
+        {
+          "epoch": 1,
+          "loss": 5.946398930391361,
+          "val_recall100": 0.0004578754578754578,
+          "val_hits": 9,
+          "val_requests": 5563,
+          "seconds": 1.7036270749813411
+        },
+        {
+          "epoch": 2,
+          "loss": 5.737334262707561,
+          "val_recall100": 0.0005767271855713344,
+          "val_hits": 9,
+          "val_requests": 5563,
+          "seconds": 1.7340316459885798
+        },
+        {
+          "epoch": 3,
+          "loss": 5.598883546116672,
+          "val_recall100": 0.000497806623335257,
+          "val_hits": 12,
+          "val_requests": 5563,
+          "seconds": 1.7242276189790573
+        },
+        {
+          "epoch": 4,
+          "loss": 5.488954392432648,
+          "val_recall100": 0.0019428702380914836,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.745133051997982
+        },
+        {
+          "epoch": 5,
+          "loss": 5.374821069942763,
+          "val_recall100": 0.001303797128973063,
+          "val_hits": 15,
+          "val_requests": 5563,
+          "seconds": 1.791149046010105
+        },
+        {
+          "epoch": 6,
+          "loss": 5.241200501036785,
+          "val_recall100": 0.00176141590790234,
+          "val_hits": 19,
+          "val_requests": 5563,
+          "seconds": 1.8554314069915563
+        },
+        {
+          "epoch": 7,
+          "loss": 5.0930019608349415,
+          "val_recall100": 0.0013306905588616517,
+          "val_hits": 20,
+          "val_requests": 5563,
+          "seconds": 1.7547077449853532
+        },
+        {
+          "epoch": 8,
+          "loss": 4.941833545204405,
+          "val_recall100": 0.0009699685571517315,
+          "val_hits": 17,
+          "val_requests": 5563,
+          "seconds": 1.7123116540024057
+        },
+        {
+          "epoch": 9,
+          "loss": 4.780171963722805,
+          "val_recall100": 0.00103527939228101,
+          "val_hits": 15,
+          "val_requests": 5563,
+          "seconds": 1.6622258109855466
+        },
+        {
+          "epoch": 10,
+          "loss": 4.622608323227549,
+          "val_recall100": 0.0010542182998591412,
+          "val_hits": 16,
+          "val_requests": 5563,
+          "seconds": 1.7311728709901217
+        },
+        {
+          "epoch": 11,
+          "loss": 4.4621176170802865,
+          "val_recall100": 0.0012374228058211517,
+          "val_hits": 18,
+          "val_requests": 5563,
+          "seconds": 1.7992798130144365
+        },
+        {
+          "epoch": 12,
+          "loss": 4.306078771997435,
+          "val_recall100": 0.0015257649987112506,
+          "val_hits": 22,
+          "val_requests": 5563,
+          "seconds": 1.70638327600318
+        }
+      ],
+      "best": {
+        "epoch": 4,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0005629416947490338,
+          "hits100": 17
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 5.394062519073486,
+          "top1": 0.04014757042750716,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 5.585819641749064,
+          "top1": 0.027994792442768812,
+          "uniform_top1": 0.00261025473779117
+        }
+      },
+      "last": {
+        "epoch": 12,
+        "later": {
+          "requests": 6954,
+          "positives": 22579,
+          "recall100": 0.0013882611811861165,
+          "hits100": 23
+        },
+        "fit_inbatch": {
+          "pairs": 4608,
+          "loss": 3.887973368167877,
+          "top1": 0.20985243593653044,
+          "uniform_top1": 0.002608160848466582
+        },
+        "validation_inbatch": {
+          "pairs": 4608,
+          "loss": 6.050386309623718,
+          "top1": 0.03233507089316845,
+          "uniform_top1": 0.00261025473779117
+        }
+      }
+    }
+  ]
+}
