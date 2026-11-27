@@ -26,6 +26,13 @@ def main():
         "--content-model-dir", type=Path, help="Also run content retrieval with this pinned BGE model"
     )
     p.add_argument("--content-out", type=Path, help="Content run directory (default: RUN/content)")
+    p.add_argument(
+        "--content-ivf",
+        nargs="?",
+        const="",
+        metavar="DIR",
+        help="Build and replay V2 IVF (default CONTENT/ann)",
+    )
     p.add_argument("--content-config", type=Path, default=ROOT / "configs/content.yaml")
     p.add_argument(
         "--resume", action="store_true", help="Skip stages with completed outputs from this configuration"
@@ -35,6 +42,8 @@ def main():
         p.error("Supply --data or QILIN_DATA")
     if args.content_out and not args.content_model_dir:
         p.error("--content-out requires --content-model-dir")
+    if args.content_ivf is not None and not args.content_model_dir:
+        p.error("--content-ivf requires --content-model-dir")
     run = args.run.resolve()
     run.mkdir(parents=True, exist_ok=True)
     common = [
@@ -76,7 +85,7 @@ def main():
         for name, digest in env["source_hashes"].items():
             # This optional module has its own run manifest. Legacy checkpoints
             # were trained before the content channel existed.
-            if name == "src/recall/content.py":
+            if name in ("src/recall/content.py", "src/recall/content_ann.py"):
                 continue
             if (name.startswith("src/") or Path(name).stem in entrypoints) and previous.get(name) != digest:
                 p.error(
@@ -156,6 +165,37 @@ def main():
         content_step("run_content", "test.json", *config_arg, "--phase", "test")
         content_step("content_cascade", "cascade.json")
         content_step("align_content", "alignment.json")
+        if args.content_ivf is not None:
+            selected = json.loads((dest / "policy.json").read_text())["selected"]
+            if selected.startswith("w") and float(selected[1:]) > 0:
+                ann_dir = Path(args.content_ivf).resolve() if args.content_ivf else dest / "ann"
+                ann = [
+                    sys.executable,
+                    "-m",
+                    "scripts.content_ann",
+                    "--run",
+                    str(run),
+                    "--content",
+                    str(dest),
+                    "--out",
+                    str(ann_dir),
+                    "--engine",
+                    "ivf",
+                    "--device",
+                    args.device,
+                ]
+                subprocess.run([*ann, "--mode", "build"], check=True, cwd=ROOT)
+                for stage in ("rank_val", "test"):
+                    if (
+                        args.resume
+                        and (ann_dir / f"ivf.{stage}.json").is_file()
+                        and (ann_dir / "ivf" / f"{stage}.top100.npz").is_file()
+                    ):
+                        continue
+                    subprocess.run([*ann, "--mode", "retrieve", "--stage", stage], check=True, cwd=ROOT)
+                subprocess.run([*ann, "--mode", "cascade"], check=True, cwd=ROOT)
+            else:
+                print("Frozen retrieval policy", selected)
     print("Finished", run, flush=True)
 
 

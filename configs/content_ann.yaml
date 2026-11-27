@@ -1,0 +1,10 @@
+# One predeclared CPU IVF operating point for the frozen V2 release.
+nlist: 1024
+nprobe: 64
+training_items: 65536
+iterations: 12
+seed: 20261127
+threads: 8
+batch_size: 128
+latency_requests: 128
+warmup: 16
