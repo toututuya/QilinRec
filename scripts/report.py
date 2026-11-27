@@ -72,7 +72,7 @@ def export(run, out):
     cols = ["scope", "model", "split", "requests", "click_requests", "positives"]
     cols += sorted(set().union(*(r.keys() for r in records)) - set(cols))
     with (out / "experiments.csv").open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=cols)
+        writer = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
         writer.writeheader()
         writer.writerows(records)
     artifacts = {}
