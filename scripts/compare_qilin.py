@@ -16,14 +16,15 @@ import torch
 from torch.nn import functional as F
 
 from scripts.align_content import order, replay
-from scripts.run_content import profiles, queries
+from scripts.run_content import profiles, queries, report, stage_pools
+from scripts.verify_run import paired_interval, request_ndcg
 from src.data import load_requests
 from src.features import FEATURES
 from src.metrics import retrieval_metrics
 from src.prerank import load_frame
 from src.rank import CTRModel, RankingDataset
 from src.recall.classical import Popularity
-from src.recall.content import InterestAdapter
+from src.recall.content import ContentIndex, InterestAdapter
 from src.runtime import write_json
 
 COMMIT = "299c02667e1dc98dd8e62aa5e13a8e04a9d0363b"
@@ -75,49 +76,57 @@ def official_queries(data, qrels_file, rows):
     return indices, pools, qrels
 
 
-@torch.inference_mode()
-def model_scores(run, content, rows, requests, frame, cfg, device):
-    split = json.loads((run / "split.json").read_text())
-    policy = json.loads((content / "policy.json").read_text())
+class FrozenBGE(torch.nn.Module):
+    def forward(self, encoded):
+        return F.normalize(encoded.float(), dim=1)
+
+
+def content_models(content, policy):
     design = json.loads((content / "design.json").read_text())["config"]
-    state = torch.load(content / "adapter.best.pt", map_location=device, weights_only=True)
+    state = torch.load(content / "adapter.best.pt", map_location="cpu", weights_only=True)
     if state["epoch"] != policy["epoch"]:
         raise ValueError("Selected model mismatch")
-    adapter = InterestAdapter(design["dimension"], design["adapter_width"]).to(device)
+    adapter = InterestAdapter(design["dimension"], design["adapter_width"])
     adapter.load_state_dict(state["model"])
-    q = queries(adapter, profiles(content, "test", rows), device)
-    matrix = np.load(content / "articles.npy", mmap_mode="r")
-    pop = Popularity(requests["fit"], len(matrix), split["cutoffs"][0], cfg["pop_half_life_hours"])
+    return {"bge": FrozenBGE(), "bge_adapter": adapter}
+
+
+@torch.inference_mode()
+def exposure_content_scores(frame, user_vectors, matrix, prior, weight, device):
+    """Score both user encoders against exactly the same logged notes."""
     ids = frame["items"]
-    owners = np.repeat(np.arange(len(rows)), np.diff(frame["offsets"]))
-    prior = np.log1p(pop.scores[ids])
-    selected = policy["selected"]
-    blended = prior.copy()
-    if selected != "pop":
-        weight = float(selected.removeprefix("w"))
-        for a in range(0, len(ids), 8192):
-            ix = slice(a, a + 8192)
-            articles = torch.as_tensor(matrix[ids[ix]], device=device).float()
-            query = torch.as_tensor(q[owners[ix]], device=device)
-            sim = (F.normalize(articles, dim=1) * query).sum(1).cpu().numpy()
-            score = sim + weight * prior[ix]
-            valid = articles.ne(0).any(1).cpu().numpy() | ((weight > 0) & (prior[ix] > 0))
-            score[~valid] = -np.inf
-            blended[ix] = np.where(q[owners[ix]].any(1), score, prior[ix])
+    owners = np.repeat(np.arange(len(frame["offsets"]) - 1), np.diff(frame["offsets"]))
+    scores = {key + suffix: np.empty(len(ids), np.float32) for key in user_vectors for suffix in ("", "_pop")}
+    for a in range(0, len(ids), 8192):
+        ix = slice(a, a + 8192)
+        articles = F.normalize(torch.as_tensor(matrix[ids[ix]], device=device).float(), dim=1)
+        has_text = articles.ne(0).any(1).cpu().numpy()
+        heat = prior[ids[ix]]
+        for name, vectors in user_vectors.items():
+            batch = vectors[owners[ix]]
+            active = batch.any(axis=1)
+            similarity = (articles * torch.as_tensor(batch, device=device)).sum(1).cpu().numpy()
+            scores[name][ix] = np.where(active & has_text, similarity, -np.inf)
+            blended = np.where(has_text | (heat > 0), similarity + weight * heat, -np.inf)
+            scores[name + "_pop"][ix] = np.where(active, blended, heat)
+    return scores
+
+
+def ranker_scores(run, rows, frame, cfg, users, device):
     base = run / "base"
     pre = lgb.Booster(model_file=str(base / "lambdarank.best.txt")).predict(
         frame["x"], num_threads=cfg["faiss_threads"]
     )
     scale = np.load(base / "rank_feature_scale.npy")
     din = CTRModel(
-        "din", np.load(base / "vectors.npy"), np.load(run / "codes.npy"), split["users"], cfg, len(scale[0])
+        "din", np.load(base / "vectors.npy"), np.load(run / "codes.npy"), users, cfg, len(scale[0])
     ).to(device)
     din.load_state_dict(torch.load(base / "din.best.pt", map_location=device, weights_only=True)["model"])
     batch = RankingDataset(rows, frame, cfg, scale, device, labeled=False)
-    return blended, pre, batch.predict(din, cfg["rank_batch"])
+    return pre, batch.predict(din, cfg["rank_batch"])
 
 
-def pool_rankings(frame, blended, pre, din, alpha, cfg):
+def pool_rankings(frame, blended, ablations, pre, din, alpha, cfg):
     result = defaultdict(list)
     ordered_flat = []
     tower_dot = frame["x"][:, FEATURES.index("tower_dot")]
@@ -139,6 +148,8 @@ def pool_rankings(frame, blended, pre, din, alpha, cfg):
         result["v2_retrieval_score"].append(initial_ids.tolist())
         result["v1_din"].append(ids[np.lexsort((ids, -din[a:b]))].tolist())
         result["v1_tower_dot"].append(ids[np.lexsort((ids, -tower_dot[a:b]))].tolist())
+        for name, scores in ablations.items():
+            result[name].append(ids[np.lexsort((ids, -scores[a:b]))].tolist())
     flat = np.concatenate(ordered_flat)
     raw = {"items": frame["items"][flat], "offsets": frame["offsets"], "prerank": pre[flat], "din": din[flat]}
     _, native = replay(raw, range(len(result["v2_final"])), alpha, cfg)
@@ -147,24 +158,31 @@ def pool_rankings(frame, blended, pre, din, alpha, cfg):
     return result
 
 
-def evaluate_set(scorer, rankings, chosen, qrels, rows, catalog_size):
+def evaluate_set(scorer, rankings, chosen, qrels, rows, catalog_size, seed):
     truth = {j: qrels[j] for j in chosen}
     unique = {j: set(v) for j, v in truth.items()}
     out = {}
+    group = [rows[j] for j in chosen]
+    ndcgs = {}
     for name, preds in rankings.items():
         ks = (10,) if name == "catalog_final_top10" else (10, 100)
+        if name == "catalog_top100":
+            ks = (10, 50, 100)
         predicted = {j: preds[j] for j in chosen}
         if set(predicted) != set(truth):
             raise ValueError("Missing predictions")
         scores = scorer(predicted, truth, ks)
         clean = scorer(predicted, unique, ks)
-        ours = retrieval_metrics([preds[j] for j in chosen], [rows[j] for j in chosen], catalog_size, ks)
+        predictions = list(predicted.values())
+        ours = retrieval_metrics(predictions, group, catalog_size, ks)
+        ndcgs[name] = request_ndcg(group, predictions)
+        np.testing.assert_allclose(ndcgs[name].mean(), ours["ndcg@10"], rtol=1e-11, atol=1e-12)
         for k in ks:
             for metric in ("MRR", "MAP", "Recall"):
                 np.testing.assert_allclose(
                     clean[f"{metric}@{k}"], ours[f"{metric.lower()}@{k}"], rtol=1e-11, atol=1e-12
                 )
-        out[name] = {"official": scores, "dedup": clean}
+        out[name] = {"official": scores, "dedup": clean, "NDCG@10": ours["ndcg@10"]}
     widths = [len(rankings["stored_order"][j]) for j in chosen]
     return {
         "requests": len(truth),
@@ -174,7 +192,42 @@ def evaluate_set(scorer, rankings, chosen, qrels, rows, catalog_size):
         "qrels_rows": sum(map(len, truth.values())),
         "unique_clicks": sum(map(len, unique.values())),
         "results": out,
+        "paired_ndcg10": {
+            f"{trial}_minus_{control}": paired_interval(ndcgs[trial] - ndcgs[control], group, seed)
+            for trial, control in (
+                ("bge_adapter", "bge"),
+                ("bge_pop", "bge"),
+                ("bge_adapter_pop", "bge_adapter"),
+                ("bge_adapter_pop", "bge_pop"),
+            )
+        },
     }
+
+
+def catalog_ablations(content, device, rows, models, matrix, catalog, pop, prior, weight, saved):
+    """Use the production catalog search, eligibility checks and historical popularity fallback."""
+    args = argparse.Namespace(out=content, device=device)
+    available = np.zeros(len(matrix), bool)
+    available[catalog] = True
+    index = ContentIndex(matrix, catalog, device)
+    warm = ContentIndex(matrix, catalog[prior[catalog] > 0], device)
+    k = saved["pop"].shape[1]
+    fused_key = f"w{weight:g}"
+    metrics, replay = {}, {}
+    for name, model in models.items():
+        pools = stage_pools(
+            args, {"k": k}, "test", rows, index, warm, model.to(device), pop, available, prior, [weight]
+        )
+        np.testing.assert_array_equal(pools["pop"], saved["pop"])
+        for key, output in (("semantic", name), (fused_key, name + "_pop")):
+            metrics[output] = report(pools[key], rows, len(catalog))
+        if name == "bge_adapter" and fused_key in saved:
+            replay["identical_ordered_top100_requests"] = int(
+                (pools[fused_key] == saved[fused_key]).all(axis=1).sum()
+            )
+            replay["requests"] = len(rows)
+    metrics["pop"] = report(saved["pop"], rows, len(catalog))
+    return {"metrics": metrics, "deployed_replay": replay}
 
 
 def compare(args):
@@ -187,14 +240,37 @@ def compare(args):
     frame = load_frame(args.run / "base", "test", "exposures")
     np.testing.assert_array_equal(frame["items"], np.concatenate([r.items for r in rows]))
     np.testing.assert_array_equal(np.diff(frame["offsets"]), [len(r.items) for r in rows])
+    split = json.loads((args.run / "split.json").read_text())
+    policy = json.loads((args.content / "policy.json").read_text())
+    selected = policy["selected"]
+    selected_weight = 0.0 if selected == "pop" else float(selected.removeprefix("w"))
+    # The released model selected 0.03 on pre-test windows. Keep the same
+    # predeclared ablation if another run selected pure heat or zero weight.
+    weight = selected_weight or 0.03
+    matrix = np.load(args.content / "articles.npy", mmap_mode="r")
+    pop = Popularity(requests["fit"], len(matrix), split["cutoffs"][0], cfg["pop_half_life_hours"])
+    prior = np.log1p(pop.scores)
+    encoders = content_models(args.content, policy)
+    encoded = profiles(args.content, "test", rows)
+    vectors = {name: queries(model.to(args.device), encoded, args.device) for name, model in encoders.items()}
+    has_profile = encoded.any(axis=1)
+    for v in vectors.values():
+        np.testing.assert_array_equal(v.any(axis=1), has_profile)
+    ablations = exposure_content_scores(frame, vectors, matrix, prior, weight, args.device)
+    deployed = ablations["bge_adapter_pop"]
+    if selected == "pop":
+        deployed = prior[frame["items"]]
+    elif selected_weight == 0:
+        active = np.repeat(has_profile, np.diff(frame["offsets"]))
+        deployed = np.where(active, ablations["bge_adapter"], prior[frame["items"]])
     alpha = json.loads((args.content / "alignment_policy.json").read_text())["selected_retrieval_weight"]
-    scores = model_scores(args.run, args.content, rows, requests, frame, cfg, args.device)
-    models = pool_rankings(frame, *scores, alpha, cfg)
+    pre, din = ranker_scores(args.run, rows, frame, cfg, split["users"], args.device)
+    models = pool_rankings(frame, deployed, ablations, pre, din, alpha, cfg)
     request_ids = [r.rid for r in rows]
-    selected = json.loads((args.content / "policy.json").read_text())["selected"]
     with np.load(args.content / "test.top100.npz") as f:
         np.testing.assert_array_equal(f["request_ids"], request_ids)
-        models["catalog_top100"] = [v[v != 0].tolist() for v in f[selected]]
+        saved = {key: f[key] for key in {"pop", selected}}
+        models["catalog_top100"] = [v[v != 0].tolist() for v in saved[selected]]
     with np.load(args.content / "test.aligned.npz") as f:
         np.testing.assert_array_equal(f["request_ids"], request_ids)
         v = f["top_items"]
@@ -202,7 +278,8 @@ def compare(args):
     rankings = {k: [ranks[i] for i in indices] for k, ranks in models.items()}
     rankings["stored_order"] = stored
     ordered = [rows[i] for i in indices]
-    size = len(np.load(args.run / "catalog.npy"))
+    catalog = np.load(args.run / "catalog.npy")
+    catalog_device = args.catalog_device or args.device
     scorer = author_metric(args.scorer)
     evidence = {
         "upstream_commit": COMMIT,
@@ -210,12 +287,18 @@ def compare(args):
         "qrels_sha256": QRELS_SHA,
         "frozen_policy": selected,
         "frozen_rank_weight": alpha,
-        "catalog_size": size,
+        "adapter_epoch": policy["epoch"],
+        "ablation_pop_weight": weight,
+        "catalog_size": len(catalog),
         "device": torch.cuda.get_device_name(args.device) if args.device.startswith("cuda") else args.device,
+        "catalog_device": torch.cuda.get_device_name(catalog_device)
+        if catalog_device.startswith("cuda")
+        else catalog_device,
         "torch_version": str(torch.__version__),
     }
     for name, n in (("config_first_1000", 1000), ("all_requests", len(rows))):
-        evidence[name] = evaluate_set(scorer, rankings, range(n), qrels, ordered, size)
+        evidence[name] = evaluate_set(scorer, rankings, range(n), qrels, ordered, len(catalog), cfg["seed"])
+        evidence[name]["empty_text_profiles"] = int((~has_profile[indices[:n]]).sum())
     full = evidence["all_requests"]["results"]
     orig = json.loads((args.content / "alignment.json").read_text())["test"]["aligned10"]
     din = json.loads((args.run / "base/din.json").read_text())["test"]["exposure"]
@@ -230,6 +313,9 @@ def compare(args):
             np.testing.assert_allclose(actual, previous, rtol=0, atol=atol)
             deltas[key][f"{metric}@10"] = actual - previous
     evidence["dedup_minus_previous_release"] = deltas
+    evidence["full_catalog_ablation"] = catalog_ablations(
+        args.content, catalog_device, rows, encoders, matrix, catalog, pop, prior, weight, saved
+    )
     write_json(args.out, evidence)
     for name in ("config_first_1000", "all_requests"):
         print(name, evidence[name]["results"]["v2_final"]["official"], flush=True)
@@ -240,4 +326,5 @@ if __name__ == "__main__":
     for k in ("run", "content", "data", "qrels", "scorer", "out"):
         p.add_argument("--" + k, type=Path, required=True)
     p.add_argument("--device", default="cuda")
+    p.add_argument("--catalog-device", help="Device for full-catalog search (defaults to --device)")
     compare(p.parse_args())
