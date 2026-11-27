@@ -1,0 +1,48 @@
+{
+  "2d79000cef450b99f6423357ce86e5c132d32dd5": {
+    "resolved": "2d79000cef450b99f6423357ce86e5c132d32dd5",
+    "recommendation_paths": [
+      "recommendation_test/train-00000-of-00001.parquet",
+      "recommendation_train/train-00000-of-00001.parquet"
+    ],
+    "files": {
+      "recommendation_train": [
+        {
+          "path": "recommendation_train/train-00000-of-00001.parquet",
+          "oid": "214f3013788b12682423f256788be05cd98b401d",
+          "size": 65785413
+        }
+      ],
+      "recommendation_test": [
+        {
+          "path": "recommendation_test/train-00000-of-00001.parquet",
+          "oid": "f7087a4321a373782da5511b01a2e0bef19a0459",
+          "size": 10284114
+        }
+      ]
+    }
+  },
+  "main": {
+    "resolved": "2d79000cef450b99f6423357ce86e5c132d32dd5",
+    "recommendation_paths": [
+      "recommendation_test/train-00000-of-00001.parquet",
+      "recommendation_train/train-00000-of-00001.parquet"
+    ],
+    "files": {
+      "recommendation_train": [
+        {
+          "path": "recommendation_train/train-00000-of-00001.parquet",
+          "oid": "214f3013788b12682423f256788be05cd98b401d",
+          "size": 65785413
+        }
+      ],
+      "recommendation_test": [
+        {
+          "path": "recommendation_test/train-00000-of-00001.parquet",
+          "oid": "f7087a4321a373782da5511b01a2e0bef19a0459",
+          "size": 10284114
+        }
+      ]
+    }
+  }
+}

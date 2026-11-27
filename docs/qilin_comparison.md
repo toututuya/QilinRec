@@ -1,6 +1,6 @@
 # 与 Qilin 论文的推荐排序指标对照
 
-在作者公开配置指定的前 1,000 个推荐测试请求上，QilinRec V2 的 MRR@10 为 **0.5882**，MAP@10 为 **0.4404**。两项均高于论文中的 BM25，分别低于 BERT 双编码器 0.0185 和 0.0144。官方数字来自论文表 10 的 Recommendation 部分，QilinRec 数字来自 Atlas 上的冻结模型回放。[论文 §5.1 与表 10](https://xuanyuan14.github.io/files/SIGIR25Chen.pdf#page=9) · [实测聚合结果](../results/content/qilin_comparison.json)
+在作者公开配置指定的前 1,000 个推荐测试请求上，QilinRec V2 两级排序的 MRR@10 为 **0.5882**，MAP@10 为 **0.4404**。最终实验同时在这批请求上实测了 BM25、冻结中文 BERT，以及仅使用拟合期真实曝光训练一轮的 BERT。论文表 10 的请求清单和微调权重仍无法逐项核对，论文数字作为外部参照。[同池基线与最终报告](final_report.md) · [论文 §5.1 与表 10](https://xuanyuan14.github.io/files/SIGIR25Chen.pdf#page=9) · [BGE 消融原始指标](../results/content/qilin_comparison.json)
 
 ## 给定官方曝光候选时的排序
 
