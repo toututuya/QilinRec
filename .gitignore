@@ -9,6 +9,7 @@ artifacts/
 *.parquet
 *.pt
 *.pth
+*.safetensors
 *.npy
 *.npz
 *.index

@@ -1,0 +1,15 @@
+model: BAAI/bge-small-zh-v1.5
+revision: 7999e1d3359715c523056ef9478215996d62a620
+dimension: 512
+article_tokens: 64
+profile_tokens: 128
+recent_titles: 10
+encoder_batch: 192
+adapter_width: 96
+adapter_epochs: 4
+adapter_lr: 0.001
+temperature: 0.06
+batch_size: 384
+seed: 20261127
+k: 100
+pop_weights: [0.0, 0.03, 0.08, 0.16, 0.32, 0.64]
