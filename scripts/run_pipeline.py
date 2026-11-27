@@ -71,7 +71,10 @@ def main():
                 p.error(
                     f"Training implementation changed in {name}. Use a new run directory or restore the original source."
                 )
-    write_json(manifest, env)
+    else:
+        # The experiment report describes the environment at the start of training.
+        # Replaying completed stages must preserve that original provenance.
+        write_json(manifest, env)
 
     def step(module, product, *extra):
         if args.resume and (run / product).is_file():
