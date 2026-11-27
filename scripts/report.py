@@ -178,7 +178,7 @@ def export(run, out):
     report += [
         (
             f"全部正例中，有 {diagnostic['not_in_fit_clicks']:,} 个对应物品在召回拟合阶段没有记录过点击，"
-            f"{diagnostic['not_in_fit_observations']:,} 个在该阶段的曝光与近期历史中均未出现；"
+            f"{diagnostic['not_in_fit_observations']:,} 个在该阶段的曝光与近期历史中均未出现。"
             f"{diagnostic['excluded_seen']:,} 个被已交互过滤，{diagnostic['outside_catalog']:,} 个在本次目录之外。"
             "各计数可能重叠，均保留在分母中。"
         ),
@@ -210,7 +210,7 @@ def export(run, out):
         ),
         "",
         (
-            "每个模型打分同一份完整曝光列表。RRF 在未进入召回的曝光上得 0 分；并列按 note ID 升序。"
+            "每个模型打分同一份完整曝光列表。RRF 在未进入召回的曝光上得 0 分。并列按 note ID 升序。"
             "精排 LogLoss 在全部曝光物品对上计算，GAUC 按用户的曝光物品对数加权。"
         ),
         "",
@@ -265,7 +265,7 @@ def export(run, out):
         "",
         (
             "通道消融仅改变融合输入。双塔消融各自重新训练、独立选择验证最佳轮次并重建索引，目录、划分和种子一致。"
-            "no_history 关闭用户塔的历史输入，no_content 关闭类目与标题输入；exposed_neg 在过滤后的批内对比项之外每行最多补一个真实曝光未点击样本。"
+            "no_history 关闭用户塔的历史输入，no_content 关闭类目与标题输入。exposed_neg 在过滤后的批内对比项之外每行最多补一个真实曝光未点击样本。"
         ),
         "",
         "## FAISS 与训练记录",
@@ -287,9 +287,9 @@ def export(run, out):
         ),
         "",
         (
-            f"向量编码 {a['encode_s']:.3f} 秒；比较了 {a['flat']['queries']} 个等距抽取的测试请求，批大小 128、CPU 线程 {a['threads']}。"
+            f"向量编码 {a['encode_s']:.3f} 秒。比较了 {a['flat']['queries']} 个等距抽取的测试请求，批大小 128、CPU 线程 {a['threads']}。"
             f"IVF 的 nlist={a['nlist']}、nprobe={a['nprobe']}，Top 100 与精确近邻的平均集合重合率 {fmt(a['ivf_flat_overlap100'])}。"
-            "查询计时包含过滤和结果整理，不含用户塔推理；相同向量的分数并列会影响集合重合率。"
+            "查询计时包含过滤和结果整理，不含用户塔推理。相同向量的分数并列会影响集合重合率。"
         ),
         "",
         (

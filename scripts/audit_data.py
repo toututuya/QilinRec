@@ -173,7 +173,7 @@ def report(a):
     for name, s in [("train", t), ("test", e)]:
         lines.append(
             f"- {name} 请求开始时间为 {utc(s['start_min'])} 至 {utc(s['start_max'])}，最后曝光为 {utc(s['end_max'])}。"
-            f"每组去重候选数的最小值、中位数、最大值为 {s['request_width_min_median_max']}；"
+            f"每组去重候选数的最小值、中位数、最大值为 {s['request_width_min_median_max']}。"
             f"官方近期点击序列长度为 {s['history_length_min_median_max']}。"
         )
     lines.extend(
@@ -187,14 +187,14 @@ def report(a):
             (
                 "request_idx 标识请求，user_idx 标识用户。每个请求的 rec_result_details_with_idx 包含真实曝光的物品、位置、曝光时间、点击、点赞、收藏、评论、分享和停留反馈。"
                 "同一请求重复曝光的同一物品按最大 click 合并，可构建有真实正负反馈的 LambdaRank 分组。"
-                "recent_clicked_note_idxs 提供用户点击历史，缺少每次历史点击的时间；审慎的历史重建见模型设计。"
+                "recent_clicked_note_idxs 提供用户点击历史，缺少每次历史点击的时间。审慎的历史重建见模型设计。"
             ),
             "",
             (
                 f"两个分片共有 {a['shared_request_ids']} 个重叠请求 ID。曝光中有 {a['exposures_outside_catalog']} 个不同 ID、"
                 f"历史中有 {a['histories_outside_catalog']} 个不同 ID 未进入笔记目录。目录提供标题、正文、三级类目、笔记类型等字段。"
                 "该版本支持发布目录上的全库召回评测。目录没有发布时间或历史快照，不能还原当时在线可投放库存。"
-                "缺少用户属性表；固定目录内容和有时间依据的交互可以支持双塔训练。测试特有的 rec_results、query、原始位置、事后动作、全期统计列均不作为模型输入。"
+                "缺少用户属性表。固定目录内容和有时间依据的交互可以支持双塔训练。测试特有的 rec_results、query、原始位置、事后动作、全期统计列均不作为模型输入。"
             ),
             "",
             "## 缺失与字段类型",
