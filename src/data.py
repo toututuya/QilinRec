@@ -1,11 +1,11 @@
 """Point-in-time request state and fixed catalog features."""
+
 import hashlib
 import heapq
 import pickle
 import zlib
 from collections import defaultdict
 from dataclasses import dataclass, field
-from pathlib import Path
 
 import numpy as np
 import pyarrow.parquet as pq
@@ -47,9 +47,17 @@ def read_requests(path):
             times = [d["request_timestamp"] for d in detail]
             if not all(t is not None and t == int(t) for t in times):
                 raise ValueError("Unexpected timestamp precision")
-            requests.append(Request(r["request_idx"], r["user_idx"], int(min(times)), int(max(times)),
-                                    np.fromiter(pairs, dtype=np.int32), np.fromiter(pairs.values(), dtype=np.uint8),
-                                    tuple(i + 1 for i in (r["recent_clicked_note_idxs"] or []))))
+            requests.append(
+                Request(
+                    r["request_idx"],
+                    r["user_idx"],
+                    int(min(times)),
+                    int(max(times)),
+                    np.fromiter(pairs, dtype=np.int32),
+                    np.fromiter(pairs.values(), dtype=np.uint8),
+                    tuple(i + 1 for i in (r["recent_clicked_note_idxs"] or [])),
+                )
+            )
     return sorted(requests, key=lambda r: (r.start, r.rid))
 
 
@@ -63,8 +71,11 @@ def split_data(train, test, cfg):
         data[name] = [r for r in eligible if lower <= r.start and r.end < upper]
         lower = upper
     data["test"] = test
-    summary = dict(cutoffs=cuts, purged_at_test=len(train)-len(eligible),
-                   purged_internal=len(eligible)-sum(len(data[k]) for k in STAGES[:-1]))
+    summary = {
+        "cutoffs": cuts,
+        "purged_at_test": len(train) - len(eligible),
+        "purged_internal": len(eligible) - sum(len(data[k]) for k in STAGES[:-1]),
+    }
     if cfg["stage_limits"]:
         for name, cap in zip(STAGES, cfg["stage_limits"], strict=True):
             rows = data[name]
@@ -109,7 +120,7 @@ def title_ids(title, count, buckets):
     if not valid_text(title):
         return [0] * count
     title = title.strip().lower()
-    grams = [title[i:i+2] for i in range(min(len(title), count))]
+    grams = [title[i : i + 2] for i in range(min(len(title), count))]
     return [1 + zlib.crc32(g.encode("utf-8")) % buckets for g in grams] + [0] * (count - len(grams))
 
 
@@ -130,9 +141,13 @@ def make_catalog(root, cfg):
                 raise ValueError("Catalog identifiers differ from the pinned revision")
             present[ids] = True
             for col, mapper in enumerate(dictionaries):
-                meta[ids, col] = [mapper.setdefault(s, len(mapper)+1) if valid_text(s) else 0
-                                  for s in b.column(col+1).to_pylist()]
-            meta[ids, 2:] = [title_ids(t, cfg["title_tokens"], cfg["title_buckets"]) for t in b.column(3).to_pylist()]
+                meta[ids, col] = [
+                    mapper.setdefault(s, len(mapper) + 1) if valid_text(s) else 0
+                    for s in b.column(col + 1).to_pylist()
+                ]
+            meta[ids, 2:] = [
+                title_ids(t, cfg["title_tokens"], cfg["title_buckets"]) for t in b.column(3).to_pylist()
+            ]
     if not present[1:].all():
         raise ValueError("Catalog is incomplete")
     return meta
@@ -148,7 +163,7 @@ def prepare(root, run, cfg):
     users = attach_histories(data, cfg["history_length"])
     meta = make_catalog(root, cfg)
     size = len(meta) - 1
-    ids = np.arange(1, size+1, dtype=np.int32)
+    ids = np.arange(1, size + 1, dtype=np.int32)
     known = set()
     train_ids = set()
     for r in data["fit"]:
@@ -158,7 +173,7 @@ def prepare(root, run, cfg):
         train_ids.update(r.hist)
     codes = np.zeros(size + 1, np.int32)
     trained = sorted(train_ids)
-    codes[trained] = np.arange(1, len(trained)+1)
+    codes[trained] = np.arange(1, len(trained) + 1)
     catalog = ids
     if 0 < cfg["catalog_limit"] < size:
         # Smoke catalog uses fit observations and a uniform catalog sample only.
@@ -168,7 +183,7 @@ def prepare(root, run, cfg):
         if len(observed) >= cap:
             catalog = np.sort(rng.choice(observed, cap, replace=False))
         else:
-            extra = rng.choice(np.setdiff1d(ids, observed), cap-len(observed), replace=False)
+            extra = rng.choice(np.setdiff1d(ids, observed), cap - len(observed), replace=False)
             catalog = np.union1d(observed, extra)
     np.save(run / "meta.npy", meta)
     np.save(run / "codes.npy", codes)
@@ -176,13 +191,28 @@ def prepare(root, run, cfg):
     np.save(run / "known.npy", np.array(sorted(known), dtype=np.int32))
     with (run / "requests.pkl").open("wb") as f:
         pickle.dump(data, f, protocol=5)
-    summary.update(users=len(users), revision=revision, catalog=len(catalog), catalog_total=size,
-                   catalog_previously_observed=len(known), item_codes=len(trained),
-                   stages={name: dict(requests=len(rows), exposures=sum(len(r.y) for r in rows),
-                                      positives=sum(int(r.y.sum()) for r in rows), with_history=sum(bool(r.hist) for r in rows),
-                                      start_min=min(r.start for r in rows), end_max=max(r.end for r in rows),
-                                      request_id_sha256=hashlib.sha256(np.array([r.rid for r in rows], dtype="<i8").tobytes()).hexdigest())
-                           for name, rows in data.items()})
+    summary.update(
+        users=len(users),
+        revision=revision,
+        catalog=len(catalog),
+        catalog_total=size,
+        catalog_previously_observed=len(known),
+        item_codes=len(trained),
+        stages={
+            name: {
+                "requests": len(rows),
+                "exposures": sum(len(r.y) for r in rows),
+                "positives": sum(int(r.y.sum()) for r in rows),
+                "with_history": sum(bool(r.hist) for r in rows),
+                "start_min": min(r.start for r in rows),
+                "end_max": max(r.end for r in rows),
+                "request_id_sha256": hashlib.sha256(
+                    np.array([r.rid for r in rows], dtype="<i8").tobytes()
+                ).hexdigest(),
+            }
+            for name, rows in data.items()
+        },
+    )
     write_json(run / "split.json", summary)
     return summary
 
@@ -195,5 +225,5 @@ def load_requests(run):
 def profile_arrays(rows, length):
     histories = np.zeros((len(rows), length), np.int32)
     for j, r in enumerate(rows):
-        histories[j, :len(r.hist)] = r.hist
+        histories[j, : len(r.hist)] = r.hist
     return np.array([r.user_code for r in rows], np.int32), histories

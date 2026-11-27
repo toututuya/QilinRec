@@ -13,9 +13,9 @@ class ItemEncoder(nn.Module):
         self.register_buffer("meta", torch.from_numpy(meta), persistent=False)
         self.register_buffer("codes", torch.from_numpy(codes), persistent=False)
         self.ids = nn.Embedding(int(codes.max()) + 1, d)
-        self.cats = nn.ModuleList(nn.Embedding(int(meta[:, i].max())+1, d, padding_idx=0) for i in (0, 1))
-        self.text = nn.Embedding(cfg["title_buckets"]+1, d, padding_idx=0)
-        self.net = nn.Sequential(nn.Linear(d * (4 if content else 1), 2*d), nn.ReLU(), nn.Linear(2*d, d))
+        self.cats = nn.ModuleList(nn.Embedding(int(meta[:, i].max()) + 1, d, padding_idx=0) for i in (0, 1))
+        self.text = nn.Embedding(cfg["title_buckets"] + 1, d, padding_idx=0)
+        self.net = nn.Sequential(nn.Linear(d * (4 if content else 1), 2 * d), nn.ReLU(), nn.Linear(2 * d, d))
 
     def forward(self, item):
         codes = self.codes[item.long()].long()
@@ -36,13 +36,15 @@ class TwoTower(nn.Module):
         d = cfg["id_dim"]
         self.with_history = variant != "no_history"
         self.item = ItemEncoder(meta, codes, cfg, content=variant != "no_content")
-        self.user = nn.Embedding(users+1, d)
-        self.net = nn.Sequential(nn.Linear(d * (2 if self.with_history else 1), 2*d), nn.ReLU(), nn.Linear(2*d, d))
+        self.user = nn.Embedding(users + 1, d)
+        self.net = nn.Sequential(
+            nn.Linear(d * (2 if self.with_history else 1), 2 * d), nn.ReLU(), nn.Linear(2 * d, d)
+        )
 
     def query(self, users, histories):
         users = users.long()
         if self.training:
-            users = users.masked_fill(torch.rand(users.shape, device=users.device) < .1, 0)
+            users = users.masked_fill(torch.rand(users.shape, device=users.device) < 0.1, 0)
         parts = [self.user(users)]
         if self.with_history:
             h = self.item(histories)
@@ -68,19 +70,23 @@ def negative_mask(items, rows):
 def contrastive_loss(model, users, histories, items, mask, temperature, extra=None):
     q = model.query(users, histories)
     v = model.item(items)
-    scores = ((q @ v.T) / temperature).masked_fill(mask, -1.e9)
+    scores = ((q @ v.T) / temperature).masked_fill(mask, -1.0e9)
     if extra is not None:
         # One verified, exposed nonclick per row, if available.
         neg = (q * model.item(extra)).sum(-1) / temperature
-        scores = torch.cat([scores, neg.masked_fill(extra == 0, -1.e9)[:, None]], dim=1)
+        scores = torch.cat([scores, neg.masked_fill(extra == 0, -1.0e9)[:, None]], dim=1)
     return F.cross_entropy(scores, torch.arange(len(items), device=items.device))
 
 
 @torch.inference_mode()
 def item_vectors(model, ids, device):
     model.eval()
-    return torch.cat([model.item(torch.as_tensor(np.array(block), device=device))
-                      for block in np.array_split(ids, max(1, (len(ids)+16383)//16384))])
+    return torch.cat(
+        [
+            model.item(torch.as_tensor(np.array(block), device=device))
+            for block in np.array_split(ids, max(1, (len(ids) + 16383) // 16384))
+        ]
+    )
 
 
 @torch.inference_mode()
@@ -88,8 +94,8 @@ def user_vectors(model, users, hist, device):
     model.eval()
     out = []
     for lo in range(0, len(users), 1024):
-        u = torch.as_tensor(users[lo:lo+1024], device=device)
-        h = torch.as_tensor(hist[lo:lo+1024], device=device)
+        u = torch.as_tensor(users[lo : lo + 1024], device=device)
+        h = torch.as_tensor(hist[lo : lo + 1024], device=device)
         out.append(model.query(u, h))
     return torch.cat(out)
 
@@ -98,17 +104,17 @@ def user_vectors(model, users, hist, device):
 def validation(model, profile, rows, catalog, device, k):
     vectors = item_vectors(model, catalog, device)
     users = user_vectors(model, *profile, device)
-    scores, hits, weight = 0., 0, 0
+    scores, hits, weight = 0.0, 0, 0
     for lo in range(0, len(rows), 24):
-        group = rows[lo:lo+24]
+        group = rows[lo : lo + 24]
         fetch = min(len(catalog), k + max(len(r.seen) for r in group))
-        ix = (users[lo:lo+len(group)] @ vectors.T).topk(fetch).indices.cpu().numpy()
+        ix = (users[lo : lo + len(group)] @ vectors.T).topk(fetch).indices.cpu().numpy()
         for r, ids in zip(group, catalog[ix]):
             pos = set(r.positives.tolist())
             if pos:
                 retrieved = [i for i in ids.tolist() if i not in r.seen][:k]
                 count = len(pos.intersection(retrieved))
                 hits += count
-                scores += count/len(pos)
+                scores += count / len(pos)
                 weight += 1
     return scores / max(1, weight), hits

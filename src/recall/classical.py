@@ -50,13 +50,15 @@ def build_itemcf(rows, size, cutoff, cfg):
             user[i] = max(user.get(i, 0), r.end)
     user_row, item_col, values = [], [], []
     for user_no, seen in enumerate(events.values()):
-        picked = sorted(seen, key=lambda i: (-seen[i], i))[:cfg["cf_user_cap"]]
+        picked = sorted(seen, key=lambda i: (-seen[i], i))[: cfg["cf_user_cap"]]
         for i in picked:
             user_row.append(user_no)
             item_col.append(i)
             values.append(2 ** ((seen[i] - cutoff) / half))
-    matrix = sparse.csr_matrix((np.asarray(values, np.float32), (user_row, item_col)), shape=(len(events), size))
-    norm = np.sqrt(np.asarray(matrix.power(2).sum(axis=0)).ravel()).clip(1.e-8)
+    matrix = sparse.csr_matrix(
+        (np.asarray(values, np.float32), (user_row, item_col)), shape=(len(events), size)
+    )
+    norm = np.sqrt(np.asarray(matrix.power(2).sum(axis=0)).ravel()).clip(1.0e-8)
     activity = 1 / np.log2(2 + np.diff(matrix.indptr)).astype(np.float32)
     normalized = matrix.multiply((1 / norm)[None, :]).tocsr()
     weighted = normalized.multiply(activity[:, None]).tocsr()
@@ -66,10 +68,10 @@ def build_itemcf(rows, size, cutoff, cfg):
     counts = np.zeros(size, np.int32)
     k = cfg["cf_neighbors"]
     for start in range(0, len(active), 2048):
-        block = active[start:start+2048]
+        block = active[start : start + 2048]
         sims = (left[block] @ weighted).tocsr()
         for row, item in enumerate(block):
-            lo, hi = sims.indptr[row:row+2]
+            lo, hi = sims.indptr[row : row + 2]
             ids, scores = sims.indices[lo:hi], sims.data[lo:hi]
             keep = ids != item
             ids, scores = ids[keep], scores[keep]
@@ -84,8 +86,8 @@ def build_itemcf(rows, size, cutoff, cfg):
 def cf_scores(graph, hist):
     out = defaultdict(float)
     for rank, i in enumerate(hist):
-        lo, hi = graph.indptr[i:i+2]
-        weight = 1 / math.sqrt(rank+1)
+        lo, hi = graph.indptr[i : i + 2]
+        weight = 1 / math.sqrt(rank + 1)
         for dest, sim in zip(graph.indices[lo:hi].tolist(), graph.data[lo:hi].tolist()):
             out[dest] += sim * weight
     return out
