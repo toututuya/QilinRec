@@ -112,7 +112,7 @@ def main():
         if dest == run:
             p.error("Content artifacts need a separate output directory")
         config = yaml.safe_load(args.content_config.read_text())
-        scope = ["encode_content.py", "run_content.py", "content_cascade.py"]
+        scope = ["encode_content.py", "run_content.py", "content_cascade.py", "align_content.py"]
         paths = [ROOT / "src/recall/content.py", args.content_config, *(ROOT / "scripts" / n for n in scope)]
         record = {
             "sources": {
@@ -155,6 +155,7 @@ def main():
         content_step("run_content", "policy.json", *config_arg, "--phase", "select")
         content_step("run_content", "test.json", *config_arg, "--phase", "test")
         content_step("content_cascade", "cascade.json")
+        content_step("align_content", "alignment.json")
     print("Finished", run, flush=True)
 
 

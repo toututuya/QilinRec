@@ -14,4 +14,6 @@ QilinRec 从推荐请求的曝光明细构建监督数据。下面列出阅读�
 
 ## 来源与许可
 
+内容召回 V2 参考 BAAI 作者实现的 CLS 池化和向量归一化，使用 MIT 许可的 BGE-small-zh-v1.5 固定权重。QilinRec 自行构造近期标题查询、训练用户塔残差层、实现并列按笔记 ID 处理的全库点积检索，并验证衰减热度与语义分数的融合。[作者编码源码](https://github.com/FlagOpen/FlagEmbedding/blob/master/FlagEmbedding/inference/embedder/encoder_only/base.py) · [固定模型版本](https://huggingface.co/BAAI/bge-small-zh-v1.5/tree/7999e1d3359715c523056ef9478215996d62a620)
+
 Qilin 官方 GitHub 树固定为 `299c02667e1dc98dd8e62aa5e13a8e04a9d0363b`。该树根目录未提供 LICENSE。[数据卡](https://huggingface.co/datasets/THUIR/Qilin)在 License 节标注 MIT。作者的 DIN 演示仓库根目录也未列独立许可证。本项目仅引用并说明这些实现，不分发原始数据和上游源码。TensorFlow Recommenders 与 DeepCTR-Torch 采用 Apache-2.0，implicit、FAISS 和 LightGBM 采用 MIT。以各仓库的许可证文本为准。[TFRS](https://github.com/tensorflow/recommenders/blob/main/LICENSE) · [DeepCTR-Torch](https://github.com/shenweichen/DeepCTR-Torch/blob/master/LICENSE) · [implicit](https://github.com/benfred/implicit/blob/main/LICENSE) · [FAISS](https://github.com/facebookresearch/faiss/blob/main/LICENSE) · [LightGBM](https://github.com/lightgbm-org/LightGBM/blob/main/LICENSE)

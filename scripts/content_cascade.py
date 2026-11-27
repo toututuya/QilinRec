@@ -106,6 +106,20 @@ def run_cascade(args):
         for method, frame in frames.items():
             stats[method] = {"retrieval": retrieval_metrics(raw[method], rows, len(catalog), (100,))}
             preds = pre.predict(frame["x"], num_threads=cfg["faiss_threads"])
+            if method == selected:
+                full = RankingDataset(rows, frame, cfg, scale, device, labeled=False)
+                dst = out / f"{stage}.model_scores.npz"
+                tmp = dst.with_suffix(".tmp.npz")
+                np.savez(
+                    tmp,
+                    request_ids=rids,
+                    items=frame["items"],
+                    offsets=frame["offsets"],
+                    prerank=preds,
+                    din=full.predict(rankers["din"], cfg["rank_batch"]),
+                )
+                tmp.replace(dst)
+                del full
             shortlist, take = rank_groups(preds, frame["items"], frame["offsets"], cfg["prerank_k"])
             offsets = np.r_[0, np.cumsum([len(g) for g in shortlist])]
             short = {"take": take, "offsets": offsets}
