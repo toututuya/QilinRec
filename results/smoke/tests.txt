@@ -1,0 +1,14 @@
+test_catalog_index_and_fusion (test_contracts.Contracts.test_catalog_index_and_fusion) ... ok
+test_exposure_alignment_and_ties (test_contracts.Contracts.test_exposure_alignment_and_ties) ... ok
+test_history_requires_completed_prior_request (test_contracts.Contracts.test_history_requires_completed_prior_request) ... ok
+test_itemcf_and_pop_filtering (test_contracts.Contracts.test_itemcf_and_pop_filtering) ... ok
+test_masked_pooling (test_contracts.Contracts.test_masked_pooling) ... ok
+test_negative_mask_for_duplicates_history_and_other_positives (test_contracts.Contracts.test_negative_mask_for_duplicates_history_and_other_positives) ... ok
+test_selection_uses_serving_tie_break (test_contracts.Contracts.test_selection_uses_serving_tie_break) ... ok
+test_strict_boundaries (test_contracts.Contracts.test_strict_boundaries) ... ok
+test_unretrieved_and_repeated_positives (test_contracts.Contracts.test_unretrieved_and_repeated_positives) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.010s
+
+OK

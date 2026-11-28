@@ -1,0 +1,10 @@
+# Single supervised comparison, fixed before evaluating the fitted BERT.
+seed: 20261127
+epochs: 1
+negatives: 3
+microbatch: 12
+accumulate: 2
+learning_rate: 0.00002
+warmup_fraction: 0.05
+query_tokens: 128
+note_tokens: 64

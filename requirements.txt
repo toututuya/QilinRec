@@ -1,0 +1,9 @@
+# Atlas used Python 3.12 and the preinstalled CUDA build of PyTorch.
+torch==2.7.1
+numpy==2.4.4
+pyarrow==26.0.1
+scipy==1.18.1
+scikit-learn==1.9.1
+lightgbm==4.7.0
+faiss-cpu==1.16.0
+PyYAML==6.0.3

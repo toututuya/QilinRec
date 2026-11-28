@@ -1,0 +1,12 @@
+# Overrides on top of default.yaml.
+stage_limits: [1400, 160, 650, 160, 192]
+catalog_limit: 50000
+tower_epochs: 2
+rank_epochs: 2
+val_queries: 64
+ivf_lists: 128
+ivf_probe: 12
+ivf_train_max: 8192
+index_benchmark_queries: 48
+lgb_rounds: 25
+lgb_patience: 5

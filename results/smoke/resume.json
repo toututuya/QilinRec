@@ -1,0 +1,22 @@
+{
+  "tower": {
+    "interrupted_after_checkpoint": 1,
+    "comparison": "maximum absolute final weight difference",
+    "max_abs_error": 0.0
+  },
+  "lambdarank": {
+    "interrupted_after_checkpoint": 1,
+    "comparison": "maximum absolute validation score difference",
+    "max_abs_error": 0.0
+  },
+  "mlp": {
+    "interrupted_after_checkpoint": 1,
+    "comparison": "maximum absolute final weight difference",
+    "max_abs_error": 0.0
+  },
+  "din": {
+    "interrupted_after_checkpoint": 1,
+    "comparison": "maximum absolute final weight difference",
+    "max_abs_error": 0.0
+  }
+}
